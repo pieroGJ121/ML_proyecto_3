@@ -1,0 +1,15 @@
+./train_subset/04HmjqykYNY_000303_000313.mp4
+./train_subset/-07Ke73N4zI_000612_000622.mp4
+./train_subset/0eFgAUfHsEk_000018_000028.mp4
+./train_subset/0K4X6shWy4g_000105_000115.mp4
+./train_subset/0mze20DX6Mw_000000_000010.mp4
+./train_subset/0pvfJqWDHdU_000112_000122.mp4
+./train_subset/0taRnclytGA_000148_000158.mp4
+./train_subset/-1MXpPymXFU_000187_000197.mp4
+./train_subset/1vuCbghkVXE_000013_000023.mp4
+./train_subset/1VX4iuBsfu4_000000_000010.mp4
+./train_subset/1vxvLu896u0_000015_000025.mp4
+./train_subset/1W0fAisdth8_000018_000028.mp4
+./train_subset/1W2-thF1RX8_000076_000086.mp4
+./train_subset/1WGGz5t7rQM_000032_000042.mp4
+./train_subset/1wkrm0RBbXo_000597_000607.mp4
