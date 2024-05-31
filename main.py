@@ -60,22 +60,22 @@ def main(args_cli):
             print(v.shape)
             print(v)
             # Flattening with column major, F
-            all_features_flatten.append(v.flatten("F"))
+            # all_features_flatten.append(v.flatten("F"))
             all_features_mean.append(v.mean(axis=0))
-    all_features_flatten = np.array(all_features_flatten)
+    # all_features_flatten = np.array(all_features_flatten)
     # print(all_features_flatten)
-    DF = pd.DataFrame(all_features_flatten)
+    # DF = pd.DataFrame(all_features_flatten)
     # print(DF)
-    filename = (
-        "datasets/train_"
-        + args.feature_type
-        + "_"
-        + str(len(video_paths))
-        + "_flatten"
-        + ".csv"
-    )
-    DF.to_csv(filename)
-    all_features_flatten = np.array(all_features_mean)
+    # filename = (
+    #     "datasets/train_"
+    #     + args.feature_type
+    #     + "_"
+    #     + str(len(video_paths))
+    #     + "_flatten"
+    #     + ".csv"
+    # )
+    # DF.to_csv(filename)
+    all_features_mean = np.array(all_features_mean)
     DF = pd.DataFrame(all_features_mean)
     # print(all_features_mean)
     # print(DF)
