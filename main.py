@@ -49,8 +49,12 @@ def main(args_cli):
 
     print(f"The number of specified videos: {len(video_paths)}")
 
+    labels_df = pd.read_csv("../ML_proyecto_3/datasets/train_label.csv")
+
+    print(video_paths)
     all_features_flatten = []
     all_features_mean = []
+    labels = []
     for video_path in tqdm(video_paths):
         print("-------------------------------------------------------------")
         print(f"Extracting for {video_path}")
@@ -62,6 +66,11 @@ def main(args_cli):
             # Flattening with column major, F
             # all_features_flatten.append(v.flatten("F"))
             all_features_mean.append(v.mean(axis=0))
+            youtube_id = video_path[
+                video_path.rfind("/") + 1 : video_path.rfind("/") + 12
+            ]
+            label = labels_df.loc[labels_df["youtube_id"] == youtube_id, "label"].item()
+            labels.append(label)
     # all_features_flatten = np.array(all_features_flatten)
     # print(all_features_flatten)
     # DF = pd.DataFrame(all_features_flatten)
@@ -77,8 +86,9 @@ def main(args_cli):
     # DF.to_csv(filename)
     all_features_mean = np.array(all_features_mean)
     DF = pd.DataFrame(all_features_mean)
+    DF["label"] = labels
     # print(all_features_mean)
-    # print(DF)
+    print(DF)
     filename = (
         "datasets/train_"
         + args.feature_type
