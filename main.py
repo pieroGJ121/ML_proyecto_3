@@ -44,21 +44,40 @@ def main(args_cli):
 
     # unifies whatever a user specified as paths into a list of paths
     video_paths = form_list_from_user_input(
-        args.video_paths, args.file_with_video_paths, to_shuffle=True
+        args.video_paths, args.file_with_video_paths, to_shuffle=False
     )
 
-    print(f"The number of specified videos: {len(video_paths)}")
+    df = pd.read_csv("train_complete_10.csv")
 
-    labels_df = pd.read_csv("../ML_proyecto_3/datasets/train_label.csv")
+    print(f"The number of specified videos: {len(df)}")
 
-    print(video_paths)
-    all_features_flatten = []
+    # labels_df = pd.read_csv("../ML_proyecto_3/datasets/training_id.csv")
+
+    df = df.iloc[:, 1:]
+    print(df)
+    # all_features_flatten = []
     all_features_mean = []
     labels = []
-    for video_path in tqdm(video_paths):
+    ids = []
+    j = 0
+    # 461 for s3d, 0 for r21d, 251 for vggish
+    # video 258, 310, 350, 450 are falling. 2 missing groups. training s3d
+    # video  are falling. 0 missing groups. training r21d
+    # video 356 are falling. 1 missing groups. val
+    limit = 10
+    # RuntimeError: Non-empty 4D data tensor expected but got a tensor with sizes [3, 0, 1, 1]
+    for i in tqdm(range(0, len(df)), initial=j):
+        video_path = video_paths[j]
         print("-------------------------------------------------------------")
         print(f"Extracting for {video_path}")
         features_dict = extractor.extract(video_path)  # note the `_` in the method name
+        # youtube_id = video_path[
+        #     video_path.rfind("/") + 1 : video_path.rfind("/") + 12
+        # ]
+        youtube_id = df.iloc[[i], 0].item()
+        label = df.iloc[[i], 2].item()
+        labels.append(label)
+        ids.append(youtube_id)
         for k, v in features_dict.items():
             print(k)
             print(v.shape)
@@ -66,38 +85,27 @@ def main(args_cli):
             # Flattening with column major, F
             # all_features_flatten.append(v.flatten("F"))
             all_features_mean.append(v.mean(axis=0))
-            youtube_id = video_path[
-                video_path.rfind("/") + 1 : video_path.rfind("/") + 12
-            ]
-            label = labels_df.loc[labels_df["youtube_id"] == youtube_id, "label"].item()
-            labels.append(label)
-    # all_features_flatten = np.array(all_features_flatten)
-    # print(all_features_flatten)
-    # DF = pd.DataFrame(all_features_flatten)
-    # print(DF)
-    # filename = (
-    #     "datasets/train_"
-    #     + args.feature_type
-    #     + "_"
-    #     + str(len(video_paths))
-    #     + "_flatten"
-    #     + ".csv"
-    # )
-    # DF.to_csv(filename)
-    all_features_mean = np.array(all_features_mean)
-    DF = pd.DataFrame(all_features_mean)
-    DF["label"] = labels
-    # print(all_features_mean)
-    print(DF)
-    filename = (
-        "datasets/train_"
-        + args.feature_type
-        + "_"
-        + str(len(video_paths))
-        + "_mean"
-        + ".csv"
-    )
-    DF.to_csv(filename)
+
+            if j % limit == 0:
+                all_features_mean = np.array(all_features_mean)
+                DF = pd.DataFrame(all_features_mean)
+                DF["label"] = labels
+                DF["youtube_id"] = ids
+                filename = (
+                    "datasets/training_"
+                    + args.feature_type
+                    + "_all_"
+                    + str(j)
+                    + "_mean"
+                    + ".csv"
+                )
+                DF.to_csv(filename)
+
+                all_features_mean = []
+                labels = []
+                ids = []
+                DF = 0
+            j += 1
 
     # yep, it is this simple!
 
