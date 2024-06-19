@@ -2,14 +2,15 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from random import sample
+from random import sample, setstate
 
 
 def distance(v1, v2):
     return np.linalg.norm(v1 - v2)
 
 
-def Init_Centroide(data, k):
+def Init_Centroide(data, k, rs):
+    setstate(rs)
     return np.array(sample(data.tolist(), k))
 
 
@@ -50,8 +51,8 @@ def distancia_promedio_centroides(old_centroides, new_centroides):
     return np.mean(promedios)
 
 
-def kmeans(data, k, umbral):
-    centroides = Init_Centroide(data, k)
+def kmeans(data, k, umbral, rs):
+    centroides = Init_Centroide(data, k, rs)
     clusters = get_cluster(data, centroides)
     new_centroides = return_new_centroide(clusters, data, k)
     while distancia_promedio_centroides(centroides, new_centroides) > umbral:
